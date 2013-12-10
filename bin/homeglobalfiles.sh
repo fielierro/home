@@ -60,7 +60,27 @@ do
     fi
 
     echo "#!/bin/bash" > $HOME/$f
+    echo "" >> $HOME/$f
     chmod +x $HOME/$f
+done
+
+
+
+# prologue for .bashrc
+cat >>$HOME/.bashrc <<EOF
+if [ -z "\$BASH_PROFILE_READ" ] ; then
+    . $HOME/.bash_profile"
+fi
+
+. /etc/bash.bashrc
+EOF
+
+# prologue for .bash_profile
+echo>>$HOME/.bash_profile "export \$BASH_PROFILE_READ=\$\$"
+
+# bash common parts
+for f in $bashfiles
+do
     for d in $dirs
     do
         echo ". $HOME/$d/$f" >> $HOME/$f
