@@ -57,8 +57,6 @@ for f in $bashfiles
 do
     if [ -z "$nobackup" ] ; then
         backup $HOME/$f
-    else
-        rm - $HOME/$f
     fi
 
     echo "#!/bin/bash" > $HOME/$f
@@ -93,6 +91,8 @@ for f in .gdbinit
 do
     if [ -z "$nobackup" ] ; then
         backup $HOME/$f
+    else
+        rm -f $HOME/$f
     fi
 
     for d in $dirs
@@ -105,6 +105,8 @@ for f in .emacs
 do
     if [ -z "$nobackup" ] ; then
         backup $HOME/$f
+    else
+        rm -f $HOME/$f
     fi
 
     for d in $dirs
