@@ -57,6 +57,8 @@ for f in $bashfiles
 do
     if [ -z "$nobackup" ] ; then
         backup $HOME/$f
+    else
+        rm - $HOME/$f
     fi
 
     echo "#!/bin/bash" > $HOME/$f
