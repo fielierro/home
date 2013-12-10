@@ -1,0 +1,8 @@
+(   for i in $*
+    do
+	echo "cat > xxx << \EoFoF$i"
+	awk '{ print }' $i
+	echo EoFoF$i
+	echo "cmp -s xxx $i || (mv $i $i~;mv xxx $i;echo new version of $i)"
+    done
+) > combined
