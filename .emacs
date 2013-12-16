@@ -55,70 +55,6 @@
 
 (desktop-save-mode 1)
 
-;; Shells
-
-(setq svt-common-commands (list "cd /home/nswinton/rfs"))
-
-(setq svtsetup-commands (list "sudo su" "source svtsetup" "cd $SVTBUILD"))
-
-(setq svt-root-bash-commands (list 
-                              "PS1='${debian_chroot:+($debian_chroot)}\\t \\u@\\h:\\w\\$ '"
-                              "export PATH=$PATH:/home/nswinton/bin"
-                              "source /home/nswinton/.bash_aliases"
-                              "source /home/nswinton/.bash_functions"
-                              "export SVTBUILDSTATUS=0"
-                              )
-)
-
-(setq svt-build-bash-commands (list "cd /var/tmp/build" "/home/nswinton/bin/svtbuild.py -d"))
-
-
-(defun svt-shell (name commands)
-  (unless (get-buffer name)
-    (shell (get-buffer-create name))
-    (switch-to-buffer name)
-    (dolist (command commands)
-      (comint-send-string (current-buffer) (concat command "\n"))
-      (comint-send-string (current-buffer) "\n")
-      )
-    )
-  )
-
-(defun svt-shells ()
-  "Create a user shell and a build shell and a root shell"
-  (interactive)
-
-  ;; Create the shells we want
-  (svt-shell "*shell*" svt-common-commands)
-  ;; (svt-shell "*build*" (append svt-common-commands svtsetup-commands svt-root-bash-commands svt-build-bash-commands))
-  (svt-shell "*root*"  (append svt-common-commands svtsetup-commands svt-root-bash-commands))
-
-  ;; Put the build buffer & window out of sight
-  ;;(bury-buffer "*build*")
-  ;; (replace-buffer-in-windows "*build*")
-  )
-
-(defun svt-build-shell ()
-  "Create a build shell"
-  (interactive)
-  (save-window-excursion
-    (svt-shell "*build*" (append svt-common-commands svtsetup-commands svt-root-bash-commands svt-build-bash-commands))
-    )
-  )
-
-(defun svt-iometer-shell ()
-  "Create a shell for iometer data handling"
-  (interactive)
-  (svt-shell "*iometer*" (append svt-common-commands))
-  )
-
-(defun svt-iohistory-shell ()
-  "Create a shell for iometer data handling"
-  (interactive)
-  (svt-shell "*iohistory*" (append svt-common-commands))
-  (cd "~/scratch")
-  )
-
 (defun my-current-directory (text)
   (if (string-match "[a-z0-9@\-]*:\([^$]+\)" text)
       (setq cur-dir (substring text (match-beginning 1) (match-end 1)))
@@ -152,13 +88,6 @@
   (set-buffer-file-coding-system 'iso-latin-1-mac t)
 )
 
-(defun sva(arg)
-  "Log in two sessions to the sva"
-  (interactive "sHost: ")
-  (ssh arg (concat "*ssh-" arg "*"))
-  (ssh arg (concat "*ssh-log" arg "*"))
-)
-
 (defun new-shell(name)
   "Create a new, named, shell buffer"
   (interactive "sName: ")
@@ -167,19 +96,12 @@
   )
 
 
-(defun donas()
-  "Log in two sessions to the sva"
-  (interactive)
-  (ssh "donas" "*ssh-donas*")
-  (ssh "donas" "*ssh-logdonas*")
-)
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(c-auto-align-backslashes t)
- '(compile-command "~nswinton/bin/svtbuild.py storage")
  '(safe-local-variable-values (quote ((c-default-style . "bsd"))))
  '(sort-fold-case t))
 (custom-set-faces
