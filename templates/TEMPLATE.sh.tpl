@@ -7,22 +7,25 @@
 # maintainer: (>>>AUTHOR<<<)
 # 
 
-function usage()
+program=$0
+
+function fatal()
 {
-    echo >&2 usage: $1 [-s server]
+    if [ -n "$*" ] ; then
+        echo >&2 "$*"
+    fi
+
+    echo >&2 usage: $program
     exit 2
 }
 
-while getopts "ds:?" o
+while getopts "d?" o
 do
     case "$o" in 
         d) set -x ;;                    # trace on
-        s) server=$OPTARG ;;            # server IP
-        ?) usage $0 ;;                  # usage
+        ?) usage ;;                     # usage
     esac
 done
 shift $(($OPTIND-1))
 
 (>>>POINT<<<)
-
-
