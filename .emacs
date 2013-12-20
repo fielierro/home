@@ -13,7 +13,10 @@
 (server-start)
 
 ;; Libraries
-(setq load-path (append (list nil "~/elisp") load-path))
+
+;; Set load path before including... 
+;; (setq load-path (append (list nil "~/elisp") load-path))
+
 (load-library "google-c-style")
 (load-library "git")
 (load-library "git-blame")
@@ -102,6 +105,7 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(c-auto-align-backslashes t)
+ '(display-time-world-list (quote (("EST5EDT" "New York") ("UTC" "Universal"))))
  '(safe-local-variable-values (quote ((c-default-style . "bsd"))))
  '(sort-fold-case t))
 (custom-set-faces
