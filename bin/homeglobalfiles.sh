@@ -69,14 +69,14 @@ done
 # prologue for .bashrc
 cat >>$HOME/.bashrc <<EOF
 if [ -z "\$BASH_PROFILE_READ" ] ; then
-    . $HOME/.bash_profile"
+    . $HOME/.bash_profile
 fi
 
 . /etc/bash.bashrc
 EOF
 
 # prologue for .bash_profile
-echo>>$HOME/.bash_profile "export \$BASH_PROFILE_READ=\$\$"
+echo>>$HOME/.bash_profile "export BASH_PROFILE_READ=\$\$"
 
 # bash common parts
 for f in $bashfiles
