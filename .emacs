@@ -1,28 +1,29 @@
-;; some setup
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
-(display-time)
+;; Setup window appearance
+(tool-bar-mode   -1)                    ; no toolbar
+(menu-bar-mode   -1)                    ; no menubar
+(scroll-bar-mode -1)                    ; no scrollbar
+(display-time)                          ; show time in the status bar
+(setq frame-title-format (list "%b - " (getenv "USER") "@" system-name)) ; window frame has buffer, username, and system name
 
-(setq frame-title-format (list "%b - " (getenv "USERNAME") "@" system-name))
-(setq user-mail-address "neil.swinton@simplivt.com")
-(put 'narrow-to-region 'disabled nil)
-(global-unset-key "\C-z")               ;minimize screws with Unity mode
-(global-set-key (kbd "M-C-f") 'grep-find)
+;; Customize keys
+(put 'narrow-to-region 'disabled nil)   ; Enable narrow-to-region
+(global-unset-key "\C-z")               ; Disable minimizing via keystroke -- it screws with VMware Unity mode
+(global-set-key (kbd "M-C-f") 'grep-find) ;Use ESC-ctrl-f for grep-find
 ;; (setq grep-find-command "find . -type f -name '*~' -prune -o -print0 | "xargs" -0 -e grep -nH -e ")
+
+;; Run server so other shells can use this session via emacsclient
 (server-start)
 
-;; Libraries
-
 ;; Set load path before including... 
-;; (setq load-path (append (list nil "~/elisp") load-path))
+;; (setq load-path (append (list nil "~/<directory>/elisp") load-path))
 
+;; Libraries
 (load-library "google-c-style")
 (load-library "git")
 (load-library "git-blame")
 (load-library "ssh.el")
 
-;; Templates
+;; Use the template package
 (require 'template)
 (template-initialize)
 
@@ -55,9 +56,9 @@
 (add-to-list 'desktop-modes-not-to-save 'Info-mode)
 (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
 (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
-
 (desktop-save-mode 1)
 
+;; dirtrack-mode settings
 (defun my-current-directory (text)
   (if (string-match "[a-z0-9@\-]*:\([^$]+\)" text)
       (setq cur-dir (substring text (match-beginning 1) (match-end 1)))
@@ -73,6 +74,9 @@
             (setq dirtrack-list '("^[0-9]+:[0-9][0-9]:[0-9][0-9]^.*[^ ]+:\\(.*\\)[\$\#] " 1 nil))
             (shell-dirtrack-mode )))
 
+;;
+;; Utility functions
+;;
 (defun unix-line-endings()
   "Change to Unix endings."
   (interactive)
@@ -98,7 +102,13 @@
   (switch-to-buffer name)
   )
 
+(defun errno()
+  "Open the base errno file on ubuntu"
+  (interactive)
+  (find-file-read-only "/usr/include/asm-generic/errno-base.h")
+)
 
+;; Customize
 (custom-set-variables
   ;; custom-set-variables was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
@@ -115,8 +125,3 @@
   ;; If there is more than one, they won't work right.
  )
 
-(defun errno()
-  "Open the base errno file on ubuntu"
-  (interactive)
-  (find-file-read-only "/usr/include/asm-generic/errno-base.h")
-)
