@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# Copyright © 2014  Neil Swinton
+# All Rights Reserved
+# 
+
+set -e
+
+program=$0
+branches="master development"
+
+function fatal()
+{
+    if [ -n "$*" ] ; then
+        echo >&2 "$*"
+    fi
+
+    echo >&2 "usage: $program <upstream-repository>"
+    exit 2
+}
+
+while getopts "p:d?" o
+do
+    case "$o" in 
+        d) set -x ;;             # trace on
+        p) pushto="$OPTARG" ;;
+        ?) usage ;;              # usage
+    esac
+done
+shift $((OPTIND - 1))
+
+if [ ! -d ./.git  ] ; then
+    fatal "Not in a git source controlled directory"
+fi
+
+upstream="$1"
+
+if [ -z "$upstream" ] ; then
+    fatal "Upstream repository required"
+fi
+shift 1
+
+
+if [ -n "$*" ] ; then
+    branches="$*"
+fi
+
+git remote | grep -q "$upstream" > /dev/null 2>&1
+status=$?
+if [[ status -ne 0 ]] ; then
+    fatal "$upstream is not a remote repository"
+fi
+
+if [ -n "$pushto" ] ; then
+    git remote | grep -q "$upstream" > /dev/null 2>&1
+    status=$?
+    if [[ status -ne 0 ]] ; then
+        fatal "$pushto is not a remote repository"
+    fi
+fi
+
+# Save current branch
+saved_branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || branch_name="(unnamed branch)"     # detached HEAD
+saved_branch_name="${branch_name##refs/heads/}"
+
+git fetch "$upstream"
+for b in $branches; do
+    branch="$b"
+    git checkout "${branch}" || git checkout --track "${upstream}/${branch}" # handle missing upstream tracking
+    git rebase "${upstream}/${branch}"
+
+    if [ -n "${pushto}" ] ; then
+        git push "${pushto}" "${branch}"
+    fi
+done
+
+git checkout "$saved_branch_name"
