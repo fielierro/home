@@ -14,14 +14,17 @@
 ;; Run server so other shells can use this session via emacsclient
 (server-start)
 
-;; Set load path before including... 
+;; Set load path before including...
 ;; (setq load-path (append (list nil "~/<directory>/elisp") load-path))
+
+(add-to-list 'auto-mode-alist '("\\.sls$" . yaml-mode))
 
 ;; Libraries
 (load-library "google-c-style")
 (load-library "git")
 (load-library "git-blame")
 (load-library "ssh.el")
+(load-library "yaml-mode.el")
 
 ;; Use the template package
 (require 'template)
@@ -34,15 +37,55 @@
 ;; Auto-fill
 (setq-default fill-column 80)
 (setq auto-fill-mode 1)
+(add-hook 'vc-log-mode-hook 'turn-on-auto-fill) ; wrap commit messages
 
-;; C Style
+
+;; Indentation
 (setq-default indent-tabs-mode nil)
 (setq standard-indent 2)
 (setq indent-tabs-mode nil)
+(setq show-trailing-whitespace 't)
+
+;; C Style
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
 (add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
+(add-hook 'c-mode-common-hook
+  (lambda()
+    (add-hook 'write-contents-functions
+      (lambda()
+        (save-excursion
+          (delete-trailing-whitespace))))))
+
+;; Emacs Lisp
+(add-hook 'emacs-lisp-mode-hook
+          (lambda ()
+
+           ;; Use spaces, not tabs.
+           (setq indent-tabs-mode nil)
+           (setq standard-indent 2)
+
+           ;; Pretty-print eval'd expressions.
+           (define-key emacs-lisp-mode-map
+            "\C-x\C-e" 'pp-eval-last-sexp)
+
+           ;; Recompile if .elc exists.
+           (add-hook (make-local-variable 'after-save-hook)
+                     (lambda ()
+                      (byte-force-recompile default-directory)))
+
+           (add-hook 'write-contents-functions
+                     (lambda()
+                      (save-excursion
+                       (delete-trailing-whitespace))))
+
+           (define-key emacs-lisp-mode-map
+            "\r" 'reindent-then-newline-and-indent)))
+
+
 (show-paren-mode 1)
+
+
 
 ;; Desktop
 (require 'desktop)
@@ -124,4 +167,3 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  )
-
