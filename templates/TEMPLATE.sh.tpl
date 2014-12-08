@@ -15,7 +15,7 @@ function fatal()
         echo >&2 "$*"
     fi
 
-    echo >&2 usage: $program
+    echo >&2 "usage: $program"
     exit 2
 }
 
@@ -26,6 +26,6 @@ do
         ?) usage ;;                     # usage
     esac
 done
-shift $(($OPTIND-1))
+shift $((OPTIND - 1))
 
 (>>>POINT<<<)
