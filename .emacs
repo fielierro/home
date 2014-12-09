@@ -24,7 +24,6 @@
 (load-library "git")
 (load-library "git-blame")
 (load-library "ssh.el")
-(load-library "yaml-mode.el")
 
 ;; Use the template package
 (require 'template)
