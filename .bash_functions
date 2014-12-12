@@ -62,3 +62,22 @@ function gitfiles
     # List git modified and added files as a bare list of file names (eg, for tar)
     git --no-pager diff --name-status | awk '/^[AM]/{print $2;}'
 }
+
+function repush()
+{
+    repo="$1"
+    if [ -z "$repo" ] ; then
+        repo="origin"
+    fi
+
+    local saved_branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || saved_branch_name="DETACHED"     # detached HEAD
+    if [ "$saved_branch_name" == "DETACHED" ] ; then
+        echo >&2 "Cannot push in branch with detached head"
+    else 
+        saved_branch_name="${saved_branch_name##refs/heads/}"
+        cmd="git push $repo $saved_branch_name"
+        echo "$cmd"
+        $cmd
+    fi
+
+}
