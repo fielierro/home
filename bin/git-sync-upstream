@@ -15,7 +15,7 @@ function fatal()
         echo >&2 "$*"
     fi
 
-    echo >&2 "usage: $program <upstream-repository>"
+    echo >&2 "usage: $program [-p <push-reciptient-repo>] <upstream-repository>"
     exit 2
 }
 
@@ -60,8 +60,8 @@ if [ -n "$pushto" ] ; then
 fi
 
 # Save current branch
-saved_branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || branch_name="(unnamed branch)"     # detached HEAD
-saved_branch_name="${branch_name##refs/heads/}"
+saved_branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || saved_branch_name="(unnamed branch)"     # detached HEAD
+saved_branch_name="${saved_branch_name##refs/heads/}"
 
 git fetch "$upstream"
 for b in $branches; do
