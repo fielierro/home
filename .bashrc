@@ -18,3 +18,8 @@ unset command_not_found_handle
 
 #export GIT_EXTERNAL_DIFF=$HOME/bin/gitdiff
 export XAUTHORITY=$HOME/.Xauthority 
+
+
+here=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+source $here/bin/git-prompt.sh
+PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
