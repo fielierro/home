@@ -9,3 +9,4 @@
 #umask 022
 
 
+export TZ="/usr/share/zoneinfo/US/Eastern"
