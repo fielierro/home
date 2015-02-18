@@ -1,3 +1,6 @@
+;; Add this directory to the load path
+(setq load-path (append (list nil (file-name-directory (or load-file-name buffer-file-name))) load-path))
+
 ;; Setup window appearance
 (tool-bar-mode   -1)                    ; no toolbar
 (menu-bar-mode   -1)                    ; no menubar
@@ -38,6 +41,9 @@
 (setq auto-fill-mode 1)
 (add-hook 'vc-log-mode-hook 'turn-on-auto-fill) ; wrap commit messages
 
+
+;; Color comint output in older Emacsen
+(ansi-color-for-comint-mode-on)
 
 ;; Indentation
 (setq-default indent-tabs-mode nil)
