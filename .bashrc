@@ -21,5 +21,9 @@ export XAUTHORITY=$HOME/.Xauthority
 
 
 here=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+
+test -r $here/.bash_aliases && source $here/.bash_aliases
+test -r $here/.bash_functions && source $here/.bash_functions
+
 source $here/bin/git-prompt.sh
 PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
