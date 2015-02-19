@@ -1,5 +1,5 @@
 ;; Add this directory to the load path
-(setq load-path (append (list nil (file-name-directory (or load-file-name buffer-file-name))) load-path))
+(setq load-path (append (list nil (concat (file-name-directory (or load-file-name buffer-file-name)) "elisp")) load-path))
 
 ;; Setup window appearance
 (tool-bar-mode   -1)                    ; no toolbar
