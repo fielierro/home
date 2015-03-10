@@ -1,5 +1,16 @@
 #!/bin/bash
 
+function repobase()
+{
+    local repobase=""
+    if [ -n "$REPOHOME" ] ; then
+        repobase=$REPOHOME
+    elif git rev-parse --show-toplevel &>/dev/null; then 
+        repobase=$(git rev-parse --show-toplevel)
+    fi
+    echo $repobase
+}    
+
 function swap()
 {
     # function to swap two file's names
@@ -47,14 +58,26 @@ function mcd()
 function gitbr()
 {
     # Set the prompt to have username, git branch, and working directory
-    gitbr=$(cd $REPOHOME  && git branch 2>/dev/null | awk '/\*/{print $2;}')
+    local basedir="$(repobase)"
+    if [ -z "$basedir" ] ; then
+        echo >&2 "Must run in a git repo or export REPOHOME"
+        return 1
+    fi
+
+    gitbr=$(cd "$basedir"  && git branch 2>/dev/null | awk '/\*/{print $2;}')
     PS1="\t \u(${gitbr}):\w\$ " 
 }
 
 function lsbr()
 {
     # List the branches in the local repository
-    (cd $REPOHOME;for k in $(git branch | sed s/^..//);do printf "%s %s\n" "$(git --no-pager log --pretty="format:%ci" -1 $k)" $k;done | sort -r)
+    local basedir="$(repobase)"
+    if [ -z "$basedir" ] ; then
+        echo >&2 "Must run in a git repo or export REPOHOME"
+        return 1
+    fi
+
+    (cd "$basedir";for k in $(git branch | sed s/^..//);do printf "%s %s\n" "$(git --no-pager log --pretty="format:%ci" -1 $k)" $k;done | sort -r)
 }
 
 function gitfiles
