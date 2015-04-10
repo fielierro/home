@@ -6,6 +6,11 @@
 (menu-bar-mode   -1)                    ; no menubar
 (scroll-bar-mode -1)                    ; no scrollbar
 (display-time)                          ; show time in the status bar
+
+;; Don't split horizontally unless I do it explicitly
+;; (setq split-height-threshold 1200)
+(setq split-width-threshold 2000)
+
 (setq frame-title-format (list "%b - " (getenv "USER") "@" system-name)) ; window frame has buffer, username, and system name
 
 ;; Customize keys
