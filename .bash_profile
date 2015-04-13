@@ -10,3 +10,6 @@
 
 
 export TZ="/usr/share/zoneinfo/US/Eastern"
+
+here=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+test -d $here/bin && export PATH="$PATH:$here/bin"
