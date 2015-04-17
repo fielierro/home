@@ -88,7 +88,7 @@ function gitfiles
 
 function gitpushpull()
 {
-    op=$1
+    op="$1"
     repo="$2"
 
     if [ "$op" != "push" -a  "$op" != "pull"  ] ; then
@@ -106,7 +106,7 @@ function gitpushpull()
         false
     else 
         saved_branch_name="${saved_branch_name##refs/heads/}"
-        cmd="git push $repo $saved_branch_name"
+        cmd="git $op $repo $saved_branch_name"
         echo "$cmd"
         $cmd
     fi
@@ -121,4 +121,17 @@ function repush()
 function repull()
 {
     gitpushpull "pull" $1
+}
+
+function gotname()
+{
+    index=$RANDOM
+    names=(daenerys "jon snow" "mance rayder" margaery sansa arya stannis cersei joffrey melisandre tywin petyr eddard jaime bran varys brienne drogo catelyn)
+    len=${#names[@]}
+
+    if [ -n "$1" ] ; then
+        index=$1
+    fi
+    index=$(( $index % $len ))
+    echo ${names[$index]}
 }
