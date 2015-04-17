@@ -86,9 +86,16 @@ function gitfiles
     git --no-pager diff --name-status | awk '/^[AM]/{print $2;}'
 }
 
-function repush()
+function gitpushpull()
 {
-    repo="$1"
+    op=$1
+    repo="$2"
+
+    if [ "$op" != "push" -a  "$op" != "pull"  ] ; then
+        echo >&2 "$0 usage: push|pull [repo]"        
+        false
+    fi
+
     if [ -z "$repo" ] ; then
         repo="origin"
     fi
@@ -96,6 +103,7 @@ function repush()
     local saved_branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || saved_branch_name="DETACHED"     # detached HEAD
     if [ "$saved_branch_name" == "DETACHED" ] ; then
         echo >&2 "Cannot push in branch with detached head"
+        false
     else 
         saved_branch_name="${saved_branch_name##refs/heads/}"
         cmd="git push $repo $saved_branch_name"
@@ -103,4 +111,14 @@ function repush()
         $cmd
     fi
 
+}
+
+function repush()
+{
+    gitpushpull "push" $1
+}
+
+function repull()
+{
+    gitpushpull "pull" $1
 }
