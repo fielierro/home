@@ -91,7 +91,7 @@ function gitpushpull()
     op="$1"
     repo="$2"
 
-    if [ "$op" != "push" -a  "$op" != "pull"  ] ; then
+    if [ "$op" != "push" -a  "$op" != "pull"  -a "$op" != "pull --rebase" ] ; then
         echo >&2 "$0 usage: push|pull [repo]"        
         false
     fi
@@ -121,6 +121,11 @@ function repush()
 function repull()
 {
     gitpushpull "pull" $1
+}
+
+function rerebase()
+{
+    gitpushpull "pull --rebase" $1
 }
 
 function gotname()
