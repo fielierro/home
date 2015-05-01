@@ -13,3 +13,20 @@ export TZ="/usr/share/zoneinfo/US/Eastern"
 
 here=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 test -d $here/bin && export PATH="$PATH:$here/bin"
+
+# Create a template ssh-config
+if [ -d ~/.ssh -a -f ~/.ssh/id_rsa -a ! -f ~/.ssh/config ] ; then
+    cat > ~/.ssh/config <<EOF
+IdentityFile ~/.ssh/id_rsa
+
+# Host example
+#      HostName 10.9.131.250
+#      ForwardAgent yes
+#      ForwardX11 yes
+#      ForwardX11Trusted yes
+#      User ec2-user
+#      IdentityFile ~/.ssh/identity.pem
+
+EOF
+    chmod 600 ~/.ssh/config
+fi
