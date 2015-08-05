@@ -110,6 +110,7 @@
 (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
 (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
 (desktop-save-mode 1)
+(setq desktop-auto-save-timeout 30)
 
 ;; dirtrack-mode settings
 (defun my-current-directory (text)
@@ -125,7 +126,7 @@
 (add-hook 'shell-mode-hook
           (lambda()
             (setq dirtrack-list '("^[0-9]+:[0-9][0-9]:[0-9][0-9]^.*[^ ]+:\\(.*\\)[\$\#] " 1 nil))
-            (shell-dirtrack-mode )))
+            (shell-dirtrack-mode 't)))
 
 ;;
 ;; Utility functions
