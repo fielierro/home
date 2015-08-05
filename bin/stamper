@@ -1,0 +1,22 @@
+#!/bin/bash
+
+stampfile="$HOME/.stamp"
+today="$(date +'%Y%m%d')"
+
+if [ -f "$stampfile" ] ; then
+   . "$stampfile"
+else
+   date=$(date +'%Y%m%d')
+fi
+
+if [ "$date" != "$today" ] ; then
+    counter=0
+fi
+
+let counter++
+cat > "$stampfile" <<EOF
+date=$today
+counter=$counter
+EOF
+
+echo "${today}.${counter}"
