@@ -128,15 +128,9 @@ function rerebase()
     gitpushpull "pull --rebase" $1
 }
 
-function gotname()
+function githome()
 {
-    index=$RANDOM
-    names=(daenerys "jon snow" "mance rayder" margaery sansa arya stannis cersei joffrey melisandre tywin petyr eddard jaime bran varys brienne drogo catelyn)
-    len=${#names[@]}
-
-    if [ -n "$1" ] ; then
-        index=$1
-    fi
-    index=$(( $index % $len ))
-    echo ${names[$index]}
+    wd=$(repobase)
+    [[ $? == 0 ]] && cd "$wd"
 }
+    
