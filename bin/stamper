@@ -1,6 +1,19 @@
 #!/bin/bash
 
 stampfile="$HOME/.stamp"
+
+while getopts "f:rd?" o
+do
+    case "$o" in 
+        f) stampfile="$OPTARG" ;; # filename
+        r) reset=true ;;         #reset counter
+        d) set -x ;;            # trace on
+        ?) usage ;;             # usage
+    esac
+done
+shift $((OPTIND - 1))
+
+
 today="$(date +'%Y%m%d')"
 
 if [ -f "$stampfile" ] ; then
@@ -10,6 +23,10 @@ else
 fi
 
 if [ "$date" != "$today" ] ; then
+    counter=0
+fi
+
+if [ -n "$reset" ] ; then
     counter=0
 fi
 
