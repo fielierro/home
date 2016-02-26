@@ -31,7 +31,11 @@
 (load-library "google-c-style")
 (load-library "git")
 (load-library "git-blame")
-(load-library "ssh.el")
+(load-library "ssh")
+(load-library "shell-procfs-dirtrack")
+
+
+
 
 ;; Use the template package
 (require 'template)
@@ -123,10 +127,13 @@
   (add-hook 'comint-output-filter-functions 'my-current-directory nil t))
 
 ;; (setq shell-mode-hook 'my-shell-setup)
-(add-hook 'shell-mode-hook
-          (lambda()
-            (setq dirtrack-list '("^[0-9]+:[0-9][0-9]:[0-9][0-9]^.*[^ ]+:\\(.*\\)[\$\#] " 1 nil))
-            (shell-dirtrack-mode 't)))
+(if (file-accessible-directory-p (format "/proc/%s/cwd" (emacs-pid)))
+    (add-hook 'shell-mode-hook 'shell-procfs-dirtrack-mode))
+
+;;(Add-hook 'shell-mode-hook
+;;          (lambda()
+;;            (setq dirtrack-list '("^[0-9]+:[0-9][0-9]:[0-9][0-9]^.*[^ ]+:\\(.*\\)[\$\#] " 1 nil))
+;;            (shell-dirtrack-mode 't)))
 
 ;;
 ;; Utility functions
