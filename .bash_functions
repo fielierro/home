@@ -5,11 +5,11 @@ function repobase()
     local repobase=""
     if [ -n "$REPOHOME" ] ; then
         repobase=$REPOHOME
-    elif git rev-parse --show-toplevel &>/dev/null; then 
+    elif git rev-parse --show-toplevel &>/dev/null; then
         repobase=$(git rev-parse --show-toplevel)
     fi
     echo $repobase
-}    
+}
 
 function swap()
 {
@@ -18,12 +18,6 @@ function swap()
     mv "$1" $TMPFILE
     mv $2 "$1"
     mv $TMPFILE "$2"
-}
-
-function co()
-{
-    # function to perform a git checkout and set the prompt with the branch name
-    git checkout $1 && gitbr=$1 && PS1="\t \u(${gitbr}):\w\$ " 
 }
 
 function gsl()
@@ -36,25 +30,6 @@ function gsl()
     $cmd
 }
 
-function mkbr()
-{
-    # Function to create a new git branch, track it upstream, and put the branchname in the prompt
-    if [ -z "$1" -o -z "$2" ] ; then
-        echo >&2 "usage: mkbr <base-branch> <new-branch-name>"
-        return
-    fi
-
-    base=$1
-    br=$2
-    git fetch && git checkout $base && git merge origin/$base && git checkout -b $br && git push origin $br && git branch --set-upstream $br origin/$br && gitbr=$br && PS1="\t \u(${gitbr}):\w\$ "
-}
-
-function mcd()
-{
-    # Make a directory and change to it
-    mkdir $1 && cd $1
-}
-
 function gitbr()
 {
     # Set the prompt to have username, git branch, and working directory
@@ -65,7 +40,7 @@ function gitbr()
     fi
 
     gitbr=$(cd "$basedir"  && git branch 2>/dev/null | awk '/\*/{print $2;}')
-    PS1="\t \u(${gitbr}):\w\$ " 
+    PS1="\t \u(${gitbr}):\w\$ "
 }
 
 function lsbr()
@@ -77,8 +52,36 @@ function lsbr()
         return 1
     fi
 
-    (cd "$basedir";for k in $(git branch | sed s/^..//);do printf "%s %s\n" "$(git --no-pager log --pretty="format:%ci" -1 $k)" $k;done | sort -r)
+    # Allow line count args for head like "lsbr -4" to pipe to "head -4"
+    head="cat"
+    if [ -n "$1" ]; then
+        head="head $1"
+    fi
+    (cd "$basedir";for k in $(git branch | sed s/^..//);do printf "%s %-40s %s\n" "$(git --no-pager log --pretty="format:%ci" -1 $k)" $k "$(git config branch."$k".description)";done | sort -r | $head | sed 's/[ ]*$//' )
 }
+
+function gcd()
+{
+    br="$1"
+    if [ -z "$br" ] ; then
+        br="development"
+    fi
+
+    if git checkout "$br" ; then
+
+        br=$(git symbolic-ref HEAD | sed 's|refs/heads/||')
+        description="$(git config branch.$br.description)"
+        if [ -n "$description" ] ; then
+            echo "$description"
+        fi
+
+        br=$(git symbolic-ref HEAD  | awk -F/ '{print $NF;}') 
+        if [[ $? == 0 ]] ; then
+            export CZ_TAG="$br"
+        fi
+    fi
+}
+
 
 function gitfiles
 {
@@ -89,33 +92,37 @@ function gitfiles
 function gitpushpull()
 {
     op="$1"
-    repo="$2"
+    repos="$2"
 
     if [ "$op" != "push" -a  "$op" != "pull"  -a "$op" != "pull --rebase" ] ; then
-        echo >&2 "$0 usage: push|pull [repo]"        
+        echo >&2 "$0 usage: push|pull [repo]"
         false
     fi
 
-    if [ -z "$repo" ] ; then
-        repo="origin"
+    if [ -z "$repos" ] ; then
+        repos="origin"
+    elif [ "$repos" == "-a" ] ; then
+        repos=$(git remote) || (echo >&2 "Failed to fetch git remotes" && return)
     fi
 
     local saved_branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || saved_branch_name="DETACHED"     # detached HEAD
     if [ "$saved_branch_name" == "DETACHED" ] ; then
         echo >&2 "Cannot push in branch with detached head"
         false
-    else 
+    else
         saved_branch_name="${saved_branch_name##refs/heads/}"
-        cmd="git $op $repo $saved_branch_name"
-        echo "$cmd"
-        $cmd
+        for repo in $repos; do
+            cmd="git $op $repo $saved_branch_name"
+            echo "$cmd"
+            $cmd
+        done
     fi
 
 }
 
 function repush()
 {
-    gitpushpull "push" $1
+    gitpushpull push $1
 }
 
 function repull()
@@ -133,4 +140,3 @@ function githome()
     wd=$(repobase)
     [[ $? == 0 ]] && cd "$wd"
 }
-    
