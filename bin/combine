@@ -1,3 +1,15 @@
+# Script by the late, great Jim Murray.  I love that Jim could do this in eight lines.
+#
+# The combine script takes list of files and combines them into a single file 
+# called "combined".  After editing "combined" and executing it, any files that 
+# changed in the combined copy are replaced with the updated version.
+#
+# For example, to replace the word PATTERN in a directory tree:
+#
+# combine $(find . -type f -exec grep -l -e  PATTERN {} + )
+# sed -i "" "s/PATTERN/NEWPATTERN/g" combined
+# bash ./combined
+# 
 (   for i in $*
     do
 	echo "cat > xxx << \EoFoF$i"
