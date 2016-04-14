@@ -140,3 +140,18 @@ function githome()
     wd=$(repobase)
     [[ $? == 0 ]] && cd "$wd"
 }
+
+function eth0()
+{
+    ifconfig -a | awk '$1=="inet" {print $2;}' | grep -v '^127\.' | head -1
+}
+
+function git-standup()
+{
+    local author=$(git config --get user.email)
+    local since="yesterday"
+    if [[ "Mon" == "$(date +%a)" ]]; then
+        since="last friday"
+    fi
+    git --no-pager log --reverse --branches --since="$since" --author="$author" --format=format:'%C(cyan) %ad %C(yellow)%h %Creset %s %Cgreen%d' --date=local && echo ""
+}
