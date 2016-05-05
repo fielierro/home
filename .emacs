@@ -13,10 +13,10 @@
 
 (setq frame-title-format (list "%b - " (getenv "USER") "@" system-name)) ; window frame has buffer, username, and system name
 
-# Require final newlines by default
+;; Require final newlines by default
 (setq require-final-newline t)
 
-# Show trialing whitespace
+;; Show trialing whitespace
 (setq show-trailing-whitespace t)
 
 ;; Customize keys
