@@ -13,6 +13,12 @@
 
 (setq frame-title-format (list "%b - " (getenv "USER") "@" system-name)) ; window frame has buffer, username, and system name
 
+# Require final newlines by default
+(setq require-final-newline t)
+
+# Show trialing whitespace
+(setq show-trailing-whitespace t)
+
 ;; Customize keys
 (put 'narrow-to-region 'disabled nil)   ; Enable narrow-to-region
 (global-unset-key "\C-z")               ; Disable minimizing via keystroke -- it screws with VMware Unity mode
@@ -22,12 +28,11 @@
 ;; Run server so other shells can use this session via emacsclient
 (server-start)
 
-;; Set load path before including...
-;; (setq load-path (append (list nil "~/<directory>/elisp") load-path))
-
+;; Use yaml mode for SaltStack sls files
 (add-to-list 'auto-mode-alist '("\\.sls$" . yaml-mode))
 
-;; Libraries
+;; Libraries -- all relative to this .emacs file
+
 (load-library "google-c-style")
 (load-library "git")
 (load-library "git-blame")
