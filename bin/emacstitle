@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Copyright © 2016  Neil Swinton
+# All Rights Reserved
+# 
+# author: neil@cazena.com
+# maintainer: neil@cazena.com
+# 
+
+program=$0
+
+function fatal()
+{
+    if [ -n "$*" ] ; then
+        echo >&2 "$*"
+    fi
+
+    echo >&2 "usage: $program"
+    exit 2
+}
+
+while getopts "d?" o
+do
+    case "$o" in 
+        d) set -x ;;                    # trace on
+        ?) usage ;;                     # usage
+    esac
+done
+shift $((OPTIND - 1))
+
+# lead='^### BEGIN emacstitle$'
+# tail='^### END emacstitle$'
+# sed -e "/$lead/,/$tail/{ /$lead/{p; r insert_file
+#         }; /$tail/p; d }"  existing_file
+cat >> $HOME/.emacs <<EOF
+(setq frame-title-format (list "%b - " (getenv "USER") "@$1" ))
+EOF
