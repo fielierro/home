@@ -121,6 +121,20 @@
 (desktop-save-mode 1)
 (setq desktop-auto-save-timeout 30)
 
+
+(defun retitle(name)
+  "Set the frame title"
+  (interactive "sName: ")
+  (setq frame-title-format (list "%b - " (getenv "USER") "@" name))
+  )
+
+
+(defun ssh-config(id host)
+  "Insert entry in ssh-config"
+  (interactive "sId: \nsHost: ")
+  (insert (format "Host %s\n     Hostname %s      \n     User dcuser\n     ForwardAgent yes\n     ForwardX11 yes\n     ForwardX11Trusted yes\n\n" id host))
+  )
+
 ;; dirtrack-mode settings
 (defun my-current-directory (text)
   (if (string-match "[a-z0-9@\-]*:\([^$]+\)" text)
