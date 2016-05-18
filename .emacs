@@ -122,6 +122,22 @@
 (setq desktop-auto-save-timeout 30)
 
 
+(defun resize-frame()
+  "On windowing system, set frame size based on screen size"
+  (interactive)
+  (when (display-graphic-p)
+    (let ((screen-height (/ (x-display-pixel-height) (frame-char-height)))
+          (screen-width (/ (x-display-pixel-width) (frame-char-width)))
+          (height-percent 90)
+          (width-percent 65))
+      (set-frame-width (selected-frame) (/ (* screen-width width-percent) 100))
+      (set-frame-height (selected-frame) (/ (* screen-height height-percent) 100))
+      )
+    )
+  )
+
+(resize-frame)
+
 (defun retitle(name)
   "Set the frame title"
   (interactive "sName: ")
