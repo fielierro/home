@@ -39,9 +39,6 @@
 (load-library "ssh")
 (load-library "shell-procfs-dirtrack")
 
-
-
-
 ;; Use the template package
 (require 'template)
 (template-initialize)
@@ -54,7 +51,6 @@
 (setq-default fill-column 80)
 (setq auto-fill-mode 1)
 (add-hook 'vc-log-mode-hook 'turn-on-auto-fill) ; wrap commit messages
-
 
 ;; Color comint output in older Emacsen
 (ansi-color-for-comint-mode-on)
@@ -104,8 +100,6 @@
 
 (show-paren-mode 1)
 
-
-
 ;; Desktop
 (require 'desktop)
 (setq desktop-path '("~/.emacs.d/"))
@@ -126,12 +120,14 @@
   "On windowing system, set frame size based on screen size"
   (interactive)
   (when (display-graphic-p)
-    (let ((screen-height (/ (x-display-pixel-height) (frame-char-height)))
-          (screen-width (/ (x-display-pixel-width) (frame-char-width)))
-          (height-percent 90)
-          (width-percent 65))
-      (set-frame-width (selected-frame) (/ (* screen-width width-percent) 100))
-      (set-frame-height (selected-frame) (/ (* screen-height height-percent) 100))
+    (let* ((screen-height (/ (x-display-pixel-height) (frame-char-height)))
+           (screen-width (/ (x-display-pixel-width) (frame-char-width)))
+           (height-percent 90)
+           (width-percent 65)
+           (new-frame-height (/ (* screen-height height-percent) 100))
+           (new-frame-width (/ (* screen-width width-percent) 100))
+           )
+      (set-frame-size (selected-frame) new-frame-width new-frame-height)
       )
     )
   )
