@@ -16,8 +16,11 @@ fi
 
 unset command_not_found_handle
 
+# Shells append history on exit instead of replacing
+shopt -s histappend
+
 #export GIT_EXTERNAL_DIFF=$HOME/bin/gitdiff
-export XAUTHORITY=$HOME/.Xauthority 
+export XAUTHORITY=$HOME/.Xauthority
 
 
 here=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
