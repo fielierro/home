@@ -32,15 +32,7 @@ function gsl()
 
 function gitbr()
 {
-    # Set the prompt to have username, git branch, and working directory
-    local basedir="$(repobase)"
-    if [ -z "$basedir" ] ; then
-        echo >&2 "Must run in a git repo or export REPOHOME"
-        return 1
-    fi
-
-    gitbr=$(cd "$basedir"  && git branch 2>/dev/null | awk '/\*/{print $2;}')
-    PS1="\t \u(${gitbr}):\w\$ "
+    git symbolic-ref HEAD | sed 's|refs/heads/||'
 }
 
 function lsbr()
