@@ -119,7 +119,15 @@
 
 ;; Desktop
 (require 'desktop)
+(unless (file-directory-p "~/.emacs.d/")
+ (make-directory "~/.emacs.d"))
+
+;; use only one desktop
 (setq desktop-path '("~/.emacs.d/"))
+(setq desktop-dirname "~/.emacs.d/")
+(setq desktop-base-file-name "emacs-desktop")
+(setq desktop-auto-save-timeout 30)
+
 (setq desktop-buffers-not-to-save
       (concat "\\("
 	      "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
@@ -129,9 +137,14 @@
 (add-to-list 'desktop-modes-not-to-save 'Info-mode)
 (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
 (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
-(desktop-save-mode 1)
-(setq desktop-auto-save-timeout 30)
 
+(desktop-save-mode 1)
+(defun my-desktop-save ()
+  (interactive)
+  ;; Don't call desktop-save-in-desktop-dir, as it prints a message.
+  (if (eq (desktop-owner) (emacs-pid))
+      (desktop-save desktop-dirname)))
+(add-hook 'auto-save-hook 'my-desktop-save)
 
 (defun resize-frame()
   "On windowing system, set frame size based on screen size"
