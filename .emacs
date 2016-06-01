@@ -19,6 +19,23 @@
 ;; Show trialing whitespace
 (setq show-trailing-whitespace t)
 
+;; Ruby
+(add-to-list 'auto-mode-alist
+             '("\\.\\(?:cap\\|gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist
+             '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
+(add-hook 'ruby-mode-hook
+          (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+
+;; sh-mode
+(add-hook 'sh-mode-hook
+          (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+
+
+;; python-mode
+(add-hook 'python-mode-hook
+          (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+
 ;; Customize keys
 (put 'narrow-to-region 'disabled nil)   ; Enable narrow-to-region
 (global-unset-key "\C-z")               ; Disable minimizing via keystroke -- it screws with VMware Unity mode
@@ -151,7 +168,7 @@
 (defun ssh-config(id host)
   "Insert entry in ssh-config"
   (interactive "sId: \nsHost: ")
-  (insert (format "Host %s\n     Hostname %s      \n     User dcuser\n     ForwardAgent yes\n     ForwardX11 yes\n     ForwardX11Trusted yes\n\n" id host))
+  (insert (format "Host %s\n     Hostname %s\n     User dcuser\n     ForwardAgent yes\n     ForwardX11 yes\n     ForwardX11Trusted yes\n\n" id host))
   )
 
 ;; dirtrack-mode settings
