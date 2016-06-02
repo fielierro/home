@@ -25,16 +25,16 @@
 (add-to-list 'auto-mode-alist
              '("\\(?:Brewfile\\|Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
 (add-hook 'ruby-mode-hook
-          (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+          (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t)))
 
 ;; sh-mode
 (add-hook 'sh-mode-hook
-          (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+          (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t)))
 
 
 ;; python-mode
 (add-hook 'python-mode-hook
-          (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+          (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t)))
 
 ;; Customize keys
 (put 'narrow-to-region 'disabled nil)   ; Enable narrow-to-region
@@ -82,12 +82,6 @@
 (add-hook 'c-mode-common-hook 'google-set-c-style)
 (add-hook 'c-mode-common-hook 'google-make-newline-indent)
 (add-hook 'c-mode-common-hook '(lambda () (c-toggle-auto-state 1)))
-(add-hook 'c-mode-common-hook
-  (lambda()
-    (add-hook 'write-contents-functions
-      (lambda()
-        (save-excursion
-          (delete-trailing-whitespace))))))
 
 ;; Emacs Lisp
 (add-hook 'emacs-lisp-mode-hook
@@ -106,10 +100,7 @@
                      (lambda ()
                       (byte-force-recompile default-directory)))
 
-           (add-hook 'write-contents-functions
-                     (lambda()
-                      (save-excursion
-                       (delete-trailing-whitespace))))
+           (add-hook 'before-save-hook 'whitespace-cleanup nil t)
 
            (define-key emacs-lisp-mode-map
             "\r" 'reindent-then-newline-and-indent)))
@@ -130,9 +121,9 @@
 
 (setq desktop-buffers-not-to-save
       (concat "\\("
-	      "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
-	      "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
-	      "\\)$"))
+              "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
+              "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
+              "\\)$"))
 (add-to-list 'desktop-modes-not-to-save 'dired-mode)
 (add-to-list 'desktop-modes-not-to-save 'Info-mode)
 (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
