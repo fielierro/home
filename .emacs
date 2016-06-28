@@ -178,7 +178,7 @@
   )
 
 
-(defun ssh-config(id host)
+(defun ssh-host(id host)
   "Insert entry in ssh-config"
   (interactive "sId: \nsHost: ")
   (insert (format "Host %s\n     Hostname %s\n     User dcuser\n     ForwardAgent yes\n     ForwardX11 yes\n     ForwardX11Trusted yes\n\n" id host))
