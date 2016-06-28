@@ -67,7 +67,7 @@ function gcd()
             echo "$description"
         fi
 
-        br=$(git symbolic-ref HEAD  | awk -F/ '{print $NF;}') 
+        br=$(git symbolic-ref HEAD  | awk -F/ '{print $NF;}')
         if [[ $? == 0 ]] ; then
             export CZ_TAG="$br"
         fi
@@ -146,4 +146,9 @@ function git-standup()
         since="last friday"
     fi
     git --no-pager log --reverse --branches --since="$since" --author="$author" --format=format:'%C(cyan) %ad %C(yellow)%h %Creset %s %Cgreen%d' --date=local && echo ""
+}
+
+function pingip()
+{
+    ping -c 1 $1 | grep ^PING | sed 's/^.*(\([0-9\.]*\)).*$/\1/'
 }
