@@ -52,6 +52,20 @@ function lsbr()
     (cd "$basedir";for k in $(git branch | sed s/^..//);do printf "%s %-40s %s\n" "$(git --no-pager log --pretty="format:%ci" -1 $k)" $k "$(git config branch."$k".description)";done | sort -r | $head | sed 's/[ ]*$//' )
 }
 
+function git-describe()
+{
+
+    br="$1"
+    desc="$2"
+
+    if [ -z "$br" ] || [ -z "$desc" ] ; then
+        echo >&2 "git-describe <branch-name> <description>"
+        return 1
+    fi
+    git config branch.${br}.description "$desc"
+}
+
+
 function gcd()
 {
     br="$1"
