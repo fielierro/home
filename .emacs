@@ -172,8 +172,14 @@
 (defun ssh-host(id host)
   "Insert entry in ssh-config"
   (interactive "sId: \nsHost: ")
-  (insert (format "Host %s\n     Hostname %s\n     User dcuser\n     ForwardAgent yes\n     ForwardX11 yes\n     ForwardX11Trusted yes\n\n" id host))
-  )
+  (save-excursion
+    (set-buffer (find-file-noselect "~/.ssh/config"))
+    (goto-char (point-max))
+    (insert (format "\nHost %s\n     Hostname %s\n     User dcuser\n     ForwardAgent yes\n     ForwardX11 yes\n     ForwardX11Trusted yes\n\n" id host))
+    (kill-new id)
+    (basic-save-buffer)
+    ))
+
 
 ;; dirtrack-mode settings
 (defun my-current-directory (text)
