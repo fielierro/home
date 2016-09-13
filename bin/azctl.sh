@@ -15,14 +15,15 @@ function fatal()
         echo >&2 "$*"
     fi
 
-    echo >&2 "usage: $program <operation> <pattern>"
+    echo >&2 "usage: $program [-t tagname=tagvalue] <operation> <pattern>"
     exit 2
 }
 
-while getopts "d?" o
+while getopts "dt:?" o
 do
     case "$o" in
         d) set -x ;;                    # trace on
+        t) tags="$OPTARG" ;;            # -t Persist=True
         ?) usage ;;                     # usage
     esac
 done
@@ -43,6 +44,11 @@ fi
 # Loop through the resource groups, then vm's within them
 rgs=$(azure group list | awk "\$2~/neil/{print \$2;}")
 for rg in $rgs; do
+
+    if [ -n "$tags" ] ; then
+        azure group set -n "$rg" -t "$tags"
+    fi
+
     azure vm list -g "$rg"
     vms=$(azure vm list -g "$rg" | awk  "\$3 == \"Succeeded\" {print \$2;}")
     if [ "$op" != "list" ] ; then
