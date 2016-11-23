@@ -20,16 +20,6 @@ function swap()
     mv $TMPFILE "$2"
 }
 
-function gsl()
-{
-    # function to start the specified program under gdbserver
-    pgm=$1
-    shift
-    cmd="gdbserver localhost:5000 $pgm --catch_system_errors=no $*"
-    echo $cmd
-    $cmd
-}
-
 function gitbr()
 {
     git symbolic-ref HEAD | sed 's|refs/heads/||'
@@ -39,12 +29,17 @@ function lsbr()
 {
     local head="cat"
     local verbose=""
-    local description
+    local description=""
+    local short=""
 
     # Parse through for -s and -<number>
     for arg in $@; do
         if [ "$arg" == "-v" ]; then
             verbose=true
+            short=""
+        elif [ "$arg" == "-s" ]; then
+            short=true
+            verbose=""
         elif [[ $arg =~ \-[0-9]+ ]]; then
             head="head $arg"
         else
@@ -68,7 +63,11 @@ function lsbr()
             if [ -n "$verbose" ]; then
                 description="$(git config branch.$k.description)"
             fi
-            printf "%s %-40s %s\n" "$(git --no-pager log --pretty="format:%ci" -1 $k)" $k "$description"
+            if [ -z "$short" ]; then
+                printf "%s %-40s %s\n" "$(git --no-pager log --pretty="format:%ci" -1 $k)" $k "$description"
+            else
+                echo $k
+            fi
         done | sort -r | $head | sed 's/[ ]*$//'
     )
 }
@@ -200,33 +199,34 @@ function nextcounter()
 
 function git-branch-delete-all()
 {
-    br="$1"
+    local br="$1"
+    local repos
     shift 1
 
     if [ -z "$1" ]; then
-        repos=origin
+        repos="$(git remote)" || (echo >&2 "Failed to list remote repositories" && return 2)
     else
-        repos=$@
+        repos="$*"
     fi
+
     if [ -z "$br" ]; then
         echo >&2 "usage: $FUNCNAME <branch-name>"
         return 1
     fi
     for repo in $repos; do
-        echo git push $repo :$br
-        git push $repo :$br
+        git ls-remote --exit-code $repo $br &>/dev/null && git push $repo :$br
     done
-    echo git branch -D $br
-    git branch -D $br
+    git rev-parse --verify --quiet $br &>/dev/null && git branch -D $br
 }
 
 function git-jira-branch()
 {
+    set -x
     local readonly ticket="$1"
-    local readonly repo="$2"
-    local readonly branch="${3-development}"
+    local readonly repo="${2-origin}"
+    local readonly branch="${3:-development}"
 
-    if [ $# -lt 2 ];then
+    if [ -z "$ticket" ];then
         echo >&2 "$FUNCNAME: usage <jira-id> <repo> <branch>"
         return 1
     fi
@@ -254,5 +254,11 @@ function git-jira-branch()
         return 4
     fi
 
+    if [ -z "$(git ls-remote $repo $branch)" ] ; then
+        echo >&2 "$FUNCNAME: Remote not found: $repo/$branch"
+        return 5
+    fi
+
     git fetch $repo $branch && git checkout -b "$new_branch" $repo/$branch
+    git config branch.${new_branch}.description "$summary"
 }
