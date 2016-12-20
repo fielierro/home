@@ -14,7 +14,7 @@ function repobase()
 function swap()
 {
     # function to swap two file's names
-    local TMPFILE=tmp.$$
+    local readonly TMPFILE=tmp.$$
     mv "$1" $TMPFILE
     mv $2 "$1"
     mv $TMPFILE "$2"
@@ -49,7 +49,7 @@ function lsbr()
     done
 
     # List the branches in the local repository
-    local basedir="$(repobase)"
+    local readonly basedir="$(repobase)"
     if [ -z "$basedir" ] ; then
         echo >&2 "$FUNCNAME: Must run in a git repo or export REPOHOME"
         return 1
@@ -75,8 +75,8 @@ function lsbr()
 function git-describe()
 {
 
-    br="$1"
-    desc="$2"
+    local readonly br="$1"
+    local readonly desc="$2"
 
     if [ -z "$br" ] || [ -z "$desc" ] ; then
         echo >&2 "$FUNCNAME: git-describe <branch-name> <description>"
@@ -88,7 +88,7 @@ function git-describe()
 
 function gcd()
 {
-    br="$1"
+    local br="$1"
     if [ -z "$br" ] ; then
         br="development"
     fi
@@ -96,7 +96,7 @@ function gcd()
     if git checkout "$br" ; then
 
         br=$(git symbolic-ref HEAD | sed 's|refs/heads/||')
-        description="$(git config branch.$br.description)"
+        local readonly description="$(git config branch.$br.description)"
         if [ -n "$description" ] ; then
             echo "$description"
         fi
@@ -117,8 +117,8 @@ function gitfiles
 
 function gitpushpull()
 {
-    op="$1"
-    repos="$2"
+    local readonly op="$1"
+    local repos="$2"
 
     if [ "$op" != "push" -a  "$op" != "pull"  -a "$op" != "pull --rebase" ] ; then
         echo >&2 "$FUNCNAME usage: push|pull [repo]"
@@ -128,7 +128,7 @@ function gitpushpull()
     if [ -z "$repos" ] ; then
         repos="origin"
     elif [ "$repos" == "-a" ] ; then
-        repos=$(git remote) || (echo >&2 "$FUNCNAME: Failed to fetch git remotes" && return)
+        repos="$(git remote)" || (echo >&2 "$FUNCNAME: Failed to list remote repositories" && return 2)
     fi
 
     local saved_branch_name="$(git symbolic-ref HEAD 2>/dev/null)" || saved_branch_name="DETACHED"     # detached HEAD
@@ -138,7 +138,7 @@ function gitpushpull()
     else
         saved_branch_name="${saved_branch_name##refs/heads/}"
         for repo in $repos; do
-            cmd="git $op $repo $saved_branch_name"
+            local cmd="git $op $repo $saved_branch_name"
             echo "$cmd"
             $cmd
         done
@@ -163,7 +163,7 @@ function rerebase()
 
 function githome()
 {
-    wd=$(repobase)
+    local wd=$(repobase)
     [[ $? == 0 ]] && cd "$wd"
 }
 
@@ -204,7 +204,7 @@ function git-branch-delete-all()
     shift 1
 
     if [ -z "$1" ]; then
-        repos="$(git remote)" || (echo >&2 "Failed to list remote repositories" && return 2)
+        repos="$(git remote)" || (echo >&2 "$FUNCNAME: Failed to list remote repositories" && return 2)
     else
         repos="$*"
     fi
