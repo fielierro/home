@@ -201,6 +201,7 @@ function git-branch-delete-all()
 {
     local br="$1"
     local repos
+    local found=""
     shift 1
 
     if [ -z "$1" ]; then
@@ -214,14 +215,18 @@ function git-branch-delete-all()
         return 1
     fi
     for repo in $repos; do
-        git ls-remote --exit-code $repo $br &>/dev/null && git push $repo :$br
+        git ls-remote --exit-code $repo $br &>/dev/null && git push $repo :$br && found=true
     done
-    git rev-parse --verify --quiet $br &>/dev/null && git branch -D $br
+    git rev-parse --verify --quiet $br &>/dev/null && git branch -D $br && found=true
+    if [ -z "$found" ] ; then
+        echo >&2 "$FUNCNAME: $br not found locally or in a remote repository"
+        return 1
+    fi
+
 }
 
 function git-jira-branch()
 {
-    set -x
     local readonly ticket="$1"
     local readonly repo="${2-origin}"
     local readonly branch="${3:-development}"
