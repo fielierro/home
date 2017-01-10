@@ -34,12 +34,15 @@ function lsbr()
 
     # Parse through for -s and -<number>
     for arg in $@; do
-        if [ "$arg" == "-v" ]; then
+        if [ "$arg" == "-v" ] ||  [ "$arg" == "--verbose" ]; then
             verbose=true
             short=""
-        elif [ "$arg" == "-s" ]; then
+        elif [ "$arg" == "-b" ] ||  [ "$arg" == "--brief" ]; then
             short=true
             verbose=""
+        elif [ "$arg" == "-?" ] || [ "$arg" == "--help" ]; then
+            echo >&2 "usage: $FUNCNAME [-v|--verbose] [-b|--brief]"
+            return 0
         elif [[ $arg =~ \-[0-9]+ ]]; then
             head="head $arg"
         else
