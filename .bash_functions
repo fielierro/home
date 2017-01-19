@@ -161,7 +161,8 @@ function repull()
 
 function rerebase()
 {
-    gitpushpull "pull --rebase" $1
+    local readonly repo="${1-upstream}"
+    gitpushpull "pull --rebase" "$repo"
 }
 
 function githome()
@@ -230,9 +231,11 @@ function git-branch-delete-all()
 
 function git-jira-branch()
 {
+    local readonly default_branch="$(basename $(git symbolic-ref HEAD))"
     local readonly ticket="$1"
-    local readonly repo="${2-origin}"
-    local readonly branch="${3:-development}"
+    local readonly branch="${2:-$default_branch}"
+    local readonly repo="${3-upstream}"
+
 
     if [ -z "$ticket" ];then
         echo >&2 "$FUNCNAME: usage <jira-id> <repo> <branch>"
