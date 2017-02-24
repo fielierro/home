@@ -238,7 +238,7 @@ function git-jira-branch()
 
 
     if [ -z "$ticket" ];then
-        echo >&2 "$FUNCNAME: usage <jira-id> <repo> <branch>"
+        echo >&2 "$FUNCNAME: usage <jira-id> <branch> <repo>"
         return 1
     fi
 
