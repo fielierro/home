@@ -273,3 +273,25 @@ function git-jira-branch()
     git fetch $repo $branch && git checkout -b "$new_branch" $repo/$branch
     git config branch.${new_branch}.description "$summary"
 }
+
+function venv()
+{
+    local readonly name="$1"
+    local readonly dirname="$HOME/virtualenv/$name"
+    if [ -z "$name" ];then
+        echo >&2 "$FUNCNAME: usage <directory-name>"
+        return 1
+    fi
+
+    if [ ! -d "$dirname" ];then
+        echo >&2 "$FUNCNAME: directory not found: $dirname"
+        return 1
+    fi
+
+    if [ ! -f "$dirname/bin/activate" ];then
+        echo >&2 "$FUNCNAME: directory is not a virtualenv: $dirname"
+        return 1
+    fi
+
+    source "$dirname/bin/activate"
+}
