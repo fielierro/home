@@ -11,6 +11,19 @@ function repobase()
     echo $repobase
 }
 
+function git-default-branch()
+{
+    base=$(repobase)
+    for remote in upstream origin;do
+        file="$base/.git/refs/remotes/$remote/HEAD"
+        if [ -f "$file" ]; then
+            grep -o < "$file" -e '\w*$'
+            return $?
+        fi
+    done
+    return 1
+}
+
 function swap()
 {
     # function to swap two file's names
@@ -93,7 +106,7 @@ function gcd()
 {
     local br="$1"
     if [ -z "$br" ] ; then
-        br="development"
+        br="$(git-default-branch)" || br=development
     fi
 
     if git checkout "$br" ; then
