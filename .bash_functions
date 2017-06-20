@@ -134,7 +134,15 @@ function gitfiles
 function gitpushpull()
 {
     local readonly op="$1"
-    local repos="$2"
+    shift 1
+
+    local args=()
+    while [[ $1 == -* ]]; do
+        args+="$1"
+        shift 1
+    done
+
+    local repos="$1"
 
     if [ "$op" != "push" -a  "$op" != "pull"  -a "$op" != "pull --rebase" ] ; then
         echo >&2 "$FUNCNAME usage: push|pull [repo]"
@@ -154,7 +162,7 @@ function gitpushpull()
     else
         saved_branch_name="${saved_branch_name##refs/heads/}"
         for repo in $repos; do
-            local cmd="git $op $repo $saved_branch_name"
+            local cmd="git $op $args $repo $saved_branch_name"
             echo "$cmd"
             $cmd
         done
@@ -164,12 +172,12 @@ function gitpushpull()
 
 function repush()
 {
-    gitpushpull push $1
+    gitpushpull push $@
 }
 
 function repull()
 {
-    gitpushpull "pull" $1
+    gitpushpull "pull" $@
 }
 
 function rerebase()
