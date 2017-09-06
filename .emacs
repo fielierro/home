@@ -1,3 +1,5 @@
+;; Sample load command for top-level .emacs: (load "~/git/home/.emacs")
+
 ;; Add this directory to the load path
 (setq load-path (append (list nil (concat (file-name-directory (or load-file-name buffer-file-name)) "elisp")) load-path))
 
@@ -15,6 +17,33 @@
 
 ;; Require final newlines by default
 (setq require-final-newline t)
+
+;----------------------------------------------------------------------------------
+;;;
+;;; time-stamp: Useful for timestamping files when you save them
+;;;
+;; jpm: DO NOT modify a read only buffer (ie, VM buffers!! ie, if I've emailed myself a script...)
+;; jpm was:     (if (and (stringp time-stamp-start)
+;    (if (and (not buffer-read-only) (stringp time-stamp-start)
+;
+; jpm: Also had to blow away time-stamp.elc, for some reason wasnt auto-recompiling...
+; see /usr/local/lib/xemacs/xemacs-packages/lisp/xemacs-base/time-stamp.el for formats:
+(add-hook 'write-file-hooks 'time-stamp)
+; jpmfix was 12/08: (setq time-stamp-format "%02d-%3b-%y %02H:%02M:%02S %u@%s")
+; jpmfix 12/08: (setq time-stamp-start "Last modified on:[ \t]+\\\\?[.]*")
+(setq time-stamp-format "%02d-%3b-%:y %02H:%02M:%02S %u/%s")
+; jpmfix was this 8/20/08: (setq time-stamp-start "Last modified on:[ \t]+\\\\?[.]*")
+; Change it to allow string to have Last modified on: <06-Sep-2017 11:10:57 neil/neilhome.dnx"
+; searc for spaces/tabs
+(setq time-stamp-start "Last modified on:[ \t]+\\\\?[\"<]*" )
+(setq time-stamp-line-limit 9999)
+(setq time-stamp-end "\\\\?[\";]*$")
+
+;; after copy Ctrl+c in Linux X11, you can paste by `yank' in emacs
+(setq x-select-enable-clipboard t)
+
+;; after mouse selection in X11, you can paste by `yank' in emacs
+(setq x-select-enable-primary t)
 
 ;; Show trialing whitespace
 (setq show-trailing-whitespace t)
