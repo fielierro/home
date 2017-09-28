@@ -192,9 +192,10 @@ function githome()
     [[ $? == 0 ]] && cd "$wd"
 }
 
-function eth0()
+function ipi()
 {
-    ifconfig -a | awk '$1=="inet" {print $2;}' | grep -v '^127\.' | head -1
+    local iface="${1:-eth0}"
+    ifconfig $iface | sed 's/inet addr:/inet /' | awk '$1=="inet" {print $2;}' | grep -v '^127\.' | head -1
 }
 
 function git-standup()
