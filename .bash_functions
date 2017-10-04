@@ -192,10 +192,9 @@ function githome()
     [[ $? == 0 ]] && cd "$wd"
 }
 
-function ipi()
+function eth0()
 {
-    local iface="${1:-eth0}"
-    ifconfig $iface | sed 's/inet addr:/inet /' | awk '$1=="inet" {print $2;}' | grep -v '^127\.' | head -1
+    ip route get 8.8.8.8 | awk '{print $$NF; exit}'
 }
 
 function git-standup()
