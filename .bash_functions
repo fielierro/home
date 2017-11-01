@@ -194,7 +194,7 @@ function githome()
 
 function eth0()
 {
-    ip route get 8.8.8.8 | awk '{print $$NF; exit}'
+    ip route get 8.8.8.8 | awk '{print $NF; exit}'
 }
 
 function git-standup()
