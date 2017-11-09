@@ -28,12 +28,12 @@
 ;
 ; jpm: Also had to blow away time-stamp.elc, for some reason wasnt auto-recompiling...
 ; see /usr/local/lib/xemacs/xemacs-packages/lisp/xemacs-base/time-stamp.el for formats:
-(add-hook 'write-file-hooks 'time-stamp)
+; (add-hook 'write-file-hooks 'time-stamp)
 ; jpmfix was 12/08: (setq time-stamp-format "%02d-%3b-%y %02H:%02M:%02S %u@%s")
 ; jpmfix 12/08: (setq time-stamp-start "Last modified on:[ \t]+\\\\?[.]*")
 (setq time-stamp-format "%02d-%3b-%:y %02H:%02M:%02S %u/%s")
 ; jpmfix was this 8/20/08: (setq time-stamp-start "Last modified on:[ \t]+\\\\?[.]*")
-; Change it to allow string to have Last modified on: <06-Sep-2017 11:10:57 neil/neilhome.dnx"
+; Change it to allow string to have Last modified on: <09-Nov-2017 08:59:22 neil/dnx-swarm-manager.jqb1nsbpafmetnlegmr14s1iig.bx.internal.cloudapp.net"
 ; searc for spaces/tabs
 (setq time-stamp-start "Last modified on:[ \t]+\\\\?[\"<]*" )
 (setq time-stamp-line-limit 9999)
@@ -80,10 +80,13 @@
 ;; Libraries -- all relative to this .emacs file
 
 (load-library "google-c-style")
-(load-library "git")
-(load-library "git-blame")
 (load-library "ssh")
 (load-library "shell-procfs-dirtrack")
+
+;; Git is installed via package manager now, but we've got a copy just in case
+;(load-library "git") ;; Install via package manager
+;(load-library "git-blame")  ;; Install via package manager
+(require 'git)
 
 ;; Use the template package
 (require 'template)
