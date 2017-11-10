@@ -316,3 +316,23 @@ function venv()
 
     source "$dirname/bin/activate"
 }
+
+
+function docker_exec()
+{
+    local readonly name="$1"
+    if [ -z "$name" ];then
+        echo >&2 "$FUNCNAME: usage <docker ps filter pattern>"
+        return 1
+    fi
+
+    shift 1
+    command="$@"
+    if [ -z "$command" ]; then
+        command="/bin/bash"
+    fi
+
+    command=$(docker ps --filter "name=$name*" --format "docker exec -it {{.ID}} $command")
+    echo "command=$command"
+    $command
+}
