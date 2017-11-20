@@ -57,8 +57,8 @@
           (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t)))
 
 ;; sh-mode
-(add-hook 'sh-mode-hook
-          (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t)))
+;(add-hook 'sh-mode-hook
+;          (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t)))
 
 
 ;; python-mode
