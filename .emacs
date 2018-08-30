@@ -56,14 +56,12 @@
 (add-hook 'ruby-mode-hook
           (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t)))
 
-;; sh-mode
-;(add-hook 'sh-mode-hook
-;          (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t)))
-
-
-;; python-mode
+;; Python Hook
 (add-hook 'python-mode-hook
-          (lambda () (add-hook 'before-save-hook 'whitespace-cleanup nil t)))
+          (function (lambda ()
+                      (add-hook 'before-save-hook 'whitespace-cleanup nil t)
+                      (setq indent-tabs-mode nil tab-width 2))))
+
 
 ;; Customize keys
 (put 'narrow-to-region 'disabled nil)   ; Enable narrow-to-region
