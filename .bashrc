@@ -29,4 +29,8 @@ test -r $here/.bash_aliases && source $here/.bash_aliases
 test -r $here/.bash_functions && source $here/.bash_functions
 
 source $here/bin/git-prompt.sh
-PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
+# Prompt like this: "neil@dnx-swarm-manager:~/git/dnx/azure (feature/DX-399-azure-core-deployment)$ "
+# PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
+
+# Prompt like this: "11:34:51 ~/git/dnx/azure (feature/DX-399-azure-core-deployment)$ "
+PROMPT_COMMAND='__git_ps1 "\t \w" "\\\$ "'
