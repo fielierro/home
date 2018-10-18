@@ -124,6 +124,30 @@ function gcd()
     fi
 }
 
+function mkbr()
+{
+    local br="$1"
+    local from="$2"
+
+    if [ -z "$br" ]; then
+        echo >&2 "$FUNCNAME: mkbr <new-branch-name> [<source-branch>]"
+        return 1
+    fi
+
+    if [ -z "$from" ]; then
+        from=$(gitbr) || return 1
+    fi
+
+
+    git checkout -b "$br" "$from"
+    br=$(git symbolic-ref HEAD  | awk -F/ '{print $NF;}')
+    if [[ $? == 0 ]] ; then
+        export CZ_TAG="$br"
+    fi
+}
+
+
+
 
 function gitfiles
 {
