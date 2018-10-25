@@ -12,6 +12,7 @@
 export TZ=${TZ:-"/usr/share/zoneinfo/US/Eastern"}
 export HISTSIZE=5000
 export HISTFILESIZE=10000
+export LC_MESSAGES=en
 
 here=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 test -d $here/bin && export PATH="$PATH:$here/bin"
