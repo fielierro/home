@@ -152,7 +152,7 @@ function mkbr()
 function gitfiles
 {
     # List git modified and added files as a bare list of file names (eg, for tar)
-    git --no-pager diff --name-status | awk '/^[AM]/{print $2;}'
+    git --no-pager diff --name-status HEAD | awk '/^[AMR]/{print $NF;}'
 }
 
 function gitpushpull()
