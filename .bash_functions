@@ -152,7 +152,10 @@ function mkbr()
 function gitfiles
 {
     # List git modified and added files as a bare list of file names (eg, for tar)
-    git --no-pager diff --name-status HEAD | awk '/^[AMR]/{print $NF;}'
+    # Default to compare against HEAD but allow any commit as the optional parameter
+
+    local compare_commit="${1:-HEAD}"
+    git --no-pager diff --name-status "$compare_commit" | awk '/^[AMR]/{print $NF;}'
 }
 
 function gitpushpull()
