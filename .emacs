@@ -15,6 +15,9 @@
 
 (setq frame-title-format (list "%b - " (getenv "USER") "@" system-name)) ; window frame has buffer, username, and system name
 
+;; Allow find-file to open urls
+(url-handler-mode 1)
+
 ;; Require final newlines by default
 (setq require-final-newline t)
 
