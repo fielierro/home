@@ -363,3 +363,10 @@ function docker_exec()
     echo "command=$command"
     $command
 }
+
+function kc_set_context_from_current() {
+    local current_context=$(kubectl config view -o=jsonpath='{.current-context}')
+    local cluster=$(kubectl config view -o=jsonpath="{.contexts[?(@.name == \"$current_context\" )].context.cluster}")
+    local user=$(kubectl config view -o=jsonpath="{.contexts[?(@.name == \"$current_context\" )].context.user}")    
+    kubectl config set-context --cluster "$cluster" --user "$user" $@
+}
