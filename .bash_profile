@@ -16,3 +16,8 @@ export LC_MESSAGES=en
 
 here=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 test -d $here/bin && export PATH="$PATH:$here/bin"
+
+# Set git configs as needed
+if git version &> /dev/null; then
+    git config alias.mkbr || git config alias.mkbr "checkout -b"
+fi
