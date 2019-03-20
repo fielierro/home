@@ -370,3 +370,11 @@ function kc_set_context_from_current() {
     local user=$(kubectl config view -o=jsonpath="{.contexts[?(@.name == \"$current_context\" )].context.user}")    
     kubectl config set-context --cluster "$cluster" --user "$user" $@
 }
+
+function kc_set_contexts()
+{
+    local namespaces=$(kc get ns -o jsonpath='{.items[*].metadata.name}')
+    for namespace in $namespaces;do
+        kc_set_context_from_current --namespace $namespace $namespace
+    done
+}
