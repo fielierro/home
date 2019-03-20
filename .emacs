@@ -65,6 +65,12 @@
                       (add-hook 'before-save-hook 'whitespace-cleanup nil t)
                       (setq indent-tabs-mode nil tab-width 2))))
 
+;; Terraform Hook
+(add-hook 'terraform-mode-hook
+          (function (lambda ()
+                      (add-hook 'before-save-hook 'whitespace-cleanup nil t)
+                      )))
+
 
 ;; Customize keys
 (put 'narrow-to-region 'disabled nil)   ; Enable narrow-to-region
