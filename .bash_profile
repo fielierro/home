@@ -10,14 +10,18 @@
 
 
 export TZ=${TZ:-"/usr/share/zoneinfo/US/Eastern"}
+
+# Bash History -- big and timestamped
 export HISTSIZE=5000
 export HISTFILESIZE=10000
-export LC_MESSAGES=en
+export HISTTIMEFORMAT="%F %R %Z "
+
+# English if available
+LANG="C"
+if locale -a 2>/dev/null | grep --silent "^en";then
+    export LANG=en
+    export LC_MESSAGES=en
+fi
 
 here=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 test -d $here/bin && export PATH="$PATH:$here/bin"
-
-# Set git configs as needed
-if git version &> /dev/null; then
-    git config alias.mkbr || git config alias.mkbr "checkout -b"
-fi
