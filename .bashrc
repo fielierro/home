@@ -28,9 +28,12 @@ here=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 test -r $here/.bash_aliases && source $here/.bash_aliases
 test -r $here/.bash_functions && source $here/.bash_functions
 
+# Prompt like this: "11:44:02 ~/git/dnx (master)$ "
 source $here/bin/git-prompt.sh
-# Prompt like this: "neil@dnx-swarm-manager:~/git/dnx/azure (feature/DX-399-azure-core-deployment)$ "
+
 # PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
 
-# Prompt like this: "11:34:51 ~/git/dnx/azure (feature/DX-399-azure-core-deployment)$ "
-PROMPT_COMMAND='__git_ps1 "\t \w" "\\\$ "'
+# Execute these commands when issueing a prompt
+# 1. __git_ps1 set the prompt based on git-prompt.sh
+# 2. Append unwritten history to the history file -- allows multiple sessions to work well
+PROMPT_COMMAND='__git_ps1 "\t \w" "\\\$ ";history -a'
