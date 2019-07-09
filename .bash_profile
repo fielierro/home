@@ -14,7 +14,17 @@ export TZ=${TZ:-"/usr/share/zoneinfo/US/Eastern"}
 # Bash History -- big and timestamped
 export HISTSIZE=5000
 export HISTFILESIZE=10000
+
+# Display date localtime timezone
 export HISTTIMEFORMAT="%F %R %Z "
+
+# Ignore duplicates or lines starting with a space
+export HISTCONTROL=ignoreboth
+
+# Ignore ls and history commands
+export HISTIGNORE='ls:history'
+
+# See .bashrc for PROMPT_COMMAND setting to append history after each command
 
 # English if available
 LANG="C"
