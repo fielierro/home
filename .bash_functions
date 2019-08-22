@@ -378,3 +378,34 @@ function kc_set_contexts()
         kc_set_context_from_current --namespace $namespace $namespace
     done
 }
+
+function clusterupdown()
+{
+    local readonly clustername="$1"
+    shift 1
+    local readonly operation="$*"
+    if [ -z "$clustername" ];then
+        echo >&2 "$FUNCNAME: usage <cluster-name>"
+        return 1
+    fi
+
+    local readonly vmids=$(az resource list -o tsv  --query "[?type=='Microsoft.Compute/virtualMachines'].id" | grep $clustername)
+    for vmid in $vmids;do
+        az vm $operation --id $vmid 
+    done
+}
+
+function clusterup()
+{
+    clusterupdown "$1" start --no-wait
+}
+
+function clusterdown()
+{
+    clusterupdown "$1" deallocate --no-wait
+}
+
+function clusterstatus()
+{
+    clusterupdown "$1" get-instance-view
+}
