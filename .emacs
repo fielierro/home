@@ -1,17 +1,30 @@
 ;; Sample load command for top-level .emacs: (load "~/git/home/.emacs")
 
-;; Make sure some packages are installed
-(package-initialize)
+;; preable, require up the emacs built in package manager.
 (require 'package)
-(add-to-list 'package-archives
-    '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
-;; Packages:
-;;   string-inflection: Inter-converts camelcase/snakecase/underscores
-(dolist (package '(string-inflection))
- (unless (package-installed-p package)
-   (package-install package))
-   (require package))
+;; configure package to use melpa, org, and melpa-stable
+(setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
+                         ("melpa" . "https://melpa.org/packages/")
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")))
+
+;; and finaglly initialize package manager
+(package-initialize)
+
+;; the rest of this uses use-package to manage loading and configuring
+;; packagess. if use-package isn't installed go fetch and install
+;; it. this is super easy because our just configured package manager
+;; can fetch use package for us.
+(when
+    (not package-archive-contents)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
+;; make use-package download all referenced but uninstalled
+;; packages.
+(setq use-package-always-ensure t)
+
 
 ;; Add this directory to the load path
 (setq load-path (append (list nil (concat (file-name-directory (or load-file-name buffer-file-name)) "elisp")) load-path))
