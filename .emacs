@@ -1,5 +1,18 @@
 ;; Sample load command for top-level .emacs: (load "~/git/home/.emacs")
 
+;; Make sure some packages are installed
+(package-initialize)
+(require 'package)
+(add-to-list 'package-archives
+    '("melpa" . "http://melpa.milkbox.net/packages/") t)
+
+;; Packages:
+;;   string-inflection: Inter-converts camelcase/snakecase/underscores
+(dolist (package '(string-inflection))
+ (unless (package-installed-p package)
+   (package-install package))
+   (require package))
+
 ;; Add this directory to the load path
 (setq load-path (append (list nil (concat (file-name-directory (or load-file-name buffer-file-name)) "elisp")) load-path))
 
