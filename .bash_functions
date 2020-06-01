@@ -391,7 +391,7 @@ function clusterupdown()
 
     local readonly vmids=$(az resource list -o tsv  --query "[?type=='Microsoft.Compute/virtualMachines'].id" | grep $clustername)
     for vmid in $vmids;do
-        az vm $operation --id $vmid 
+        az vm $operation -o table --id $vmid 
     done
 }
 
